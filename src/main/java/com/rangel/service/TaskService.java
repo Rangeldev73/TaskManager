@@ -1,12 +1,19 @@
 package com.rangel.service;
-import com.rangel.repository.*;
-import com.rangel.model.*;
 
-import java.util.ArrayList;
+import com.rangel.model.Task;
+import com.rangel.repository.TaskRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class TaskService {
-    private TaskRepository repository = new TaskRepository();
+
+    private final TaskRepository repository;
+
+    public TaskService(TaskRepository repository) {
+        this.repository = repository;
+    }
 
     public Task createTask(String title, String description) {
         Task task = new Task(title, description);
@@ -18,10 +25,14 @@ public class TaskService {
     }
 
     public Task getTaskById(Long id) {
-        return repository.findById(id);
+        return repository.findById(id).orElse(null);
     }
 
     public boolean deleteTask(Long id) {
-        return repository.deleteById(id);
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

@@ -7,11 +7,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
-    private TaskService service = new TaskService();
+    private final TaskService service;
+
+    public TaskController(TaskService service) {
+        this.service = service;
+    }
 
     @PostMapping
-    public Task create(String title, String description){
-        return service.createTask(title,description);
+    public Task create(@RequestParam String title,
+                       @RequestParam String description) {
+        return service.createTask(title, description);
     }
 
     @GetMapping
@@ -20,12 +25,12 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public Task getById(Long id){
+    public Task getById(@PathVariable Long id) {
         return service.getTaskById(id);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(Long id){
+    public boolean delete(@PathVariable Long id) {
         return service.deleteTask(id);
     }
 }

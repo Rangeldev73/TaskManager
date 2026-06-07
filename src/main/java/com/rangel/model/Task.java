@@ -1,11 +1,20 @@
 package com.rangel.model;
 import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "tasks")
 public class Task {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String description;
+
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
+
     private LocalDateTime createdAt;
 
     public Task(String title,String description){
@@ -14,6 +23,8 @@ public class Task {
         this.status = TaskStatus.PENDING;
         this.createdAt = LocalDateTime.now();
     }
+
+    public Task() {}
 
     public Long getId(){
         return id;
@@ -33,10 +44,6 @@ public class Task {
 
     public LocalDateTime getCreatedAt(){
         return createdAt;
-    }
-
-    public void setId(Long id){
-        this.id=id;//only taskrepository will use thsi
     }
 
     public void setTitle(String title) {
