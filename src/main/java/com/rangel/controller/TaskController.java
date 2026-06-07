@@ -1,6 +1,7 @@
 package com.rangel.controller;
 import com.rangel.model.*;
 import com.rangel.service.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -14,23 +15,31 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task create(@RequestParam String title,
-                       @RequestParam String description) {
-        return service.createTask(title, description);
+    public ResponseEntity<Task> create(@RequestParam String title,
+                                       @RequestParam String description) {
+        Task task = service.createTask(title, description);
+        return ResponseEntity.status(201).body(task);
     }
 
     @GetMapping
-    public List<Task> getAll(){
-        return service.getAllTasks();
+    public ResponseEntity<List<Task>> getAll() {
+        return ResponseEntity.ok(service.getAllTasks());
     }
 
     @GetMapping("/{id}")
-    public Task getById(@PathVariable Long id) {
-        return service.getTaskById(id);
+    public ResponseEntity<Task> getById(@PathVariable Long id) {
+        Task task = service.getTaskById(id);
+        if (task == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(task);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Long id) {
-        return service.deleteTask(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (service.deleteTask(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
