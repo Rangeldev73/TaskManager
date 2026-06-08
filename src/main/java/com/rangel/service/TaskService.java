@@ -1,6 +1,6 @@
 package com.rangel.service;
 
-import com.rangel.model.Task;
+import com.rangel.model.*;
 import com.rangel.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +34,16 @@ public class TaskService {
             return true;
         }
         return false;
+    }
+
+    public Task updateTask(Long id, String title, String description, TaskStatus status) {
+        Task task = getTaskById(id);
+        if (task == null) {
+            return null;
+        }
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setStatus(status);
+        return repository.save(task);
     }
 }
